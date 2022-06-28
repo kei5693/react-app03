@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter, Route, Routes, NavLink, Outlet} from "react-router-dom";
+import {BrowserRouter, Route, Routes, NavLink, Outlet, useParams} from "react-router-dom";
 
 function Home(){
   return (
@@ -13,6 +13,12 @@ function Home(){
     </div>
   )
 }
+
+var contents = [
+  {id: 1, title: 'HTML', desc: 'HTML is ...'},
+  {id: 2, title: 'JS', desc: 'JS is ...'},
+  {id: 3, title: 'React', desc: 'React is ...'}
+];
 
 function Topics(){
   return (
@@ -24,6 +30,32 @@ function Topics(){
         <li><NavLink to="/topics/3">React</NavLink></li>
       </ul>
       <Outlet />
+    </div>
+  )
+}
+
+function Topic(){
+  var params = useParams();
+  var topic_id = params.topic_id;
+  var selected_topic = {
+    title: 'Sorry',
+    desc: 'Not Found'
+  };
+  console.log('params = ', params.topic_id);
+
+  for(var i = 0; i < contents.length; i++){
+    if(contents[i].id === Number(topic_id)){
+      selected_topic = contents[i];
+      break;
+    }
+  }
+
+  console.log(selected_topic);
+
+  return (
+    <div>
+      <h3>{selected_topic.title}</h3>
+      {selected_topic.desc}
     </div>
   )
 }
@@ -53,7 +85,7 @@ function App(){
         <li><Link to="/">Home</Link></li>
         <li><Link to="/topics">Topics</Link></li>
         <li><Link to="/contact">Contact</Link></li>
-      </ul> */}
+      </ul> */} 
       <ul>
         <li><NavLink to="/">Home</NavLink></li>
         <li><NavLink to="/topics">Topics</NavLink></li>
@@ -62,10 +94,11 @@ function App(){
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/topics" element={<Topics />}>
-          <Route path="1" element={<h3>HTML is...</h3>} />
+          {/* <Route path="1" element={<h3>HTML is...</h3>} />
           <Route path="2" element={<h3>JS is...</h3>} />
           <Route path="3" element={<h3>React is...</h3>} />
-          <Route path="*" element={<Notfound />} />
+          <Route path="*" element={<Notfound />} /> */}
+          <Route path=":topic_id" element={<Topic />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
         <Route path="/*" element={<Notfound />} />
